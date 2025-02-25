@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome, <%= user.name %>!</h1>
+    </header>
+
+    <!--  Button to Open Form -->
+    <button id="add-book-btn" class="floating-button">+</button>
+
+    <!--  Backdrop and Form Modal -->
+    <div id="book-form-backdrop" class="hidden"></div>
+    <div id="book-form-container" class="modal hidden">
+        <form id="book-form" class="modal-content">
+            <h2>Add a New Book</h2>
+            <input type="text" id="title" placeholder="Book Title" required>
+            <input type="text" id="author" placeholder="Author" required>
+
+            <select id="status">
+                <option value="wishlist">Wishlist</option>
+                <option value="reading">Reading</option>
+                <option value="completed">Completed</option>
+            </select>
+
+            <div id="rating-container" class="hidden">
+                <p>Rating:</p>
+                <div id="stars">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="rating" value="0">
+            </div>
+
+            <button type="submit" class="btn">Add Book</button>
+            <button type="button" id="close-form-btn" class="btn secondary-btn">Cancel</button>
+        </form>
+    </div>
+
+    <h2>Your Book List</h2>
+    <h2>Wishlist</h2>
+    <div id="wishlist-books" class="book-list"></div>
+
+    <h2>Reading</h2>
+    <div id="reading-books" class="book-list"></div>
+
+    <h2>Completed</h2>
+    <div id="completed-books" class="book-list"></div>
+
+    <a href="/logout" class="logout-link">Logout</a>
+
+    <script src="/js/books.js" defer></script>
+    <script>
+        const booksFromServer = JSON.parse('<%- JSON.stringify(books).replace(/</g, "\\u003c") %>');
+    </script>
+</body>
+</html>

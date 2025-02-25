@@ -1,0 +1,327 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary: #ccd5ae;
+    --secondary: #e9edc9;
+    --background: #fefae0;
+    --accent: #faedcd;
+    --button: #fbf8cc;
+    --button-hover: #e1d8a8;
+    --text: #4a4a4a;
+    --link: #7a8265;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Global Body Styles */
+body {
+    background-color: var(--background);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.banner {
+    width: 100%;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Centered container */
+.container {
+    width: 85%;
+    max-width: 750px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    margin-top: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: scale(1.02);
+}
+
+.button {
+    background: var(--button) !important;
+    color: var(--text) !important;
+    padding: 15px 25px !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s, transform 0.2s !important;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3) !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+.button:hover {
+    background: var(--button-hover) !important;
+    transform: scale(1.08) !important;
+}
+
+.button:active {
+    transform: scale(0.95) !important;
+}
+
+
+
+input, textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 12px 0;
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    background: var(--background);
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+input:focus, textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+form {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--accent);
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background: var(--primary);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 20px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: var(--accent);
+}
+
+.fade-in {
+    animation: fadeIn ease 1.5s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.home-image {
+    width: 90%;
+    max-width: 700px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.home-image:hover {
+    transform: scale(1.05);
+}
+
+
+.floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--button);
+    color: var(--text);
+    font-size: 2rem;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    margin: 15px;
+}
+
+.floating-button:hover {
+    background-color: var(--button-hover);
+    margin: 15px;
+}
+
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+.book-card {
+    background-color: var(--secondary);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    text-align: center;
+}
+
+.book-card h3 {
+    color: var(--text);
+    margin: 15px;
+}
+
+.book-card p {
+    font-size: 0.9rem;
+}
+
+
+.hidden {
+    display: none;
+}
+
+#book-form-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--background);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.star {
+    font-size: 24px;
+    cursor: pointer;
+    color: gray;
+}
+
+.star:hover,
+.star:hover ~ .star {
+    color: gold;
+}
+
+.btn {
+    background-color: var(--button);
+    color: var(--text);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background-color: var(--button-hover);
+}
+
+.secondary-btn {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.secondary-btn:hover {
+    background-color: var(--accent);
+}
+
+.book-card button {
+    background-color: var(--button); /* Цвет кнопки */
+    color: var(--text); /* Цвет текста */
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: "Georgia", serif; /* Винтажный шрифт */
+}
+
+.book-card button:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.book-card button:active {
+    transform: scale(0.95);
+}
+
+
+
+.logout-link {
+    display: block;
+    margin-top: 20px;
+    color: var(--link);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.logout-link:hover {
+    text-decoration: underline;
+}
