@@ -141,3 +141,4 @@ Deploy the project, use platforms like **Render, Replit, or Railway**. Store sen
 ```bash
 nodemon server.js
 ```
+## MIT License
