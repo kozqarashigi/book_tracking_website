@@ -86,6 +86,22 @@
         <div id="completed-books" class="book-list"></div>
     </div>
 
+    <!-- Logout Button -->
+<button id="logout-btn" class="btn btn-danger">Logout</button>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const logoutBtn = document.getElementById("logout-btn");
+      if (logoutBtn) {
+          logoutBtn.addEventListener("click", function () {
+              localStorage.removeItem("token"); // Remove stored JWT token
+              window.location.href = "/login"; // Redirect to login page
+          });
+      }
+  });
+</script>
+
+
     <script src="/js/books.js" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {

@@ -143,15 +143,15 @@ tr:hover {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--button);
+    color: var(--text);
+    font-weight: bold;
 }
 
 .modal-buttons .secondary-btn {
-    background-color: #808080;
+    background-color: var(--secondary);
 }
 
-/* Убедитесь, что класс hidden правильно скрывает модальное окно */
 .hidden {
     display: none !important;
 }
