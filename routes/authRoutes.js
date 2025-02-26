@@ -1,74 +1,84 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { validateRegister } = require('../middleware/validator');
 const router = express.Router();
 
+// Generate JWT
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '1d'
+    });
+};
+
 // Register User
-router.post('/register', async (req, res) => {
+router.post('/register', validateRegister, async (req, res) => {
     const { username, email, password } = req.body;
-    console.log(username, email, password);
-  
-    // Validate inputs
-    if (!username || !email || !password) {
-      return res.render('register', { error: 'All fields are required' });
-    }
-  
-    if (password.length < 6) {
-      return res.render('register', { error: 'Password must be at least 6 characters long' });
-    }
-  
+    
+    
     try {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return res.render('register', { error: 'Email is already registered' });
-      }
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email is already registered' });
+        }
 
-      const newUser = new User({ username, email, password, role: 'user' });
-      await newUser.save();
+        const newUser = new User({ username, email, password, role: 'user' });
+        await newUser.save();
 
-      res.redirect('/login');
+        // Generate token
+        const token = generateToken(newUser._id);
+        
+        res.status(201).json({
+            _id: newUser._id,
+            username: newUser.username,
+            email: newUser.email,
+            role: newUser.role,
+            token
+        });
     } catch (err) {
-      console.error('Registration error:', err);
-      res.render('register', { error: 'Error registering user' });
+        console.error('Registration error:', err);
+        res.status(500).json({ error: 'Error registering user' });
     }
 });
 
 // Login User
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-  
+    
     // Validate email and password
     if (!email || !password) {
-      return res.render('login', { error: 'Email and password are required' });
+        return res.status(400).json({ error: 'Email and password are required' });
     }
-  
+    
     try {
-      const user = await User.findOne({ email });
-  
-      // If the user is not found
-      if (!user) {
-        return res.render('login', { error: 'Unregistered email' });
-      }
+        const user = await User.findOne({ email });
+        
+        // If the user is not found
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
 
-      const isMatch = await bcrypt.compare(password, user.password);
-      console.log(isMatch);
-      if (!isMatch) {
-        return res.render('login', { error: 'Incorrect password' });
-      }
+        const isMatch = await bcrypt.compare(password, user.password);
+        
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
 
-      // Save session
-      req.session.user = { id: user._id, username: user.username, role: user.role };
-      res.redirect('/dashboard');
+        // Generate token
+        const token = generateToken(user._id);
+        
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            token
+        });
     } catch (err) {
-      res.render('login', { error: 'Error logging in' });
+        console.error('Login error:', err);
+        res.status(500).json({ error: 'Error logging in' });
     }
-  });
-
-// Logout
-router.get("/logout", (req, res) => {
-    req.session.destroy(() => {
-        res.redirect("/login");
-    });
 });
 
 module.exports = router;

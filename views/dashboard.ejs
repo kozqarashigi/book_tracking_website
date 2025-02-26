@@ -8,7 +8,8 @@
 </head>
 <body>
     <header>
-        <h1>Welcome, <%= user.name %>!</h1>
+        <h1 id="welcome-header">Welcome!</h1>
+        <div id="admin-link-container"></div>
     </header>
 
     <!--  Button to Open Form -->
@@ -46,20 +47,46 @@
     </div>
 
     <h2>Your Book List</h2>
-    <h2>Wishlist</h2>
-    <div id="wishlist-books" class="book-list"></div>
 
-    <h2>Reading</h2>
-    <div id="reading-books" class="book-list"></div>
+    <div id="wishlist-section">
+        <h2>Wishlist</h2>
+        <div id="wishlist-books" class="book-list"></div>
+    </div>
 
-    <h2>Completed</h2>
-    <div id="completed-books" class="book-list"></div>
+    <div id="reading-section">
+        <h2>Reading</h2>
+        <div id="reading-books" class="book-list"></div>
+    </div>
+
+    <div id="completed-section">
+        <h2>Completed</h2>
+        <div id="completed-books" class="book-list"></div>
+    </div>
 
     <a href="/logout" class="logout-link">Logout</a>
 
     <script src="/js/books.js" defer></script>
     <script>
-        const booksFromServer = JSON.parse('<%- JSON.stringify(books).replace(/</g, "\\u003c") %>');
+        document.addEventListener('DOMContentLoaded', () => {
+            const userString = localStorage.getItem('user');
+            
+            if (!userString) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            const user = JSON.parse(userString);
+            
+            const welcomeHeader = document.getElementById('welcome-header');
+            if (welcomeHeader) {
+                welcomeHeader.textContent = `Welcome, ${user.username}!`;
+            }
+            
+            const adminLinkContainer = document.getElementById('admin-link-container');
+            if (adminLinkContainer && user.role === 'admin') {
+                adminLinkContainer.innerHTML = '<a href="/admin" class="admin-link">Go to Admin Panel</a>';
+            }
+        });
     </script>
 </body>
 </html>

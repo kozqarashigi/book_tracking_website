@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>Admin Panel</h1>
+            <nav class="admin-nav">
+                <button class="tab-button active" data-tab="users">Users</button>
+                <button class="tab-button" data-tab="books">Books</button>
+            </nav>
+        </header>
+
+        <!-- Users Section -->
+        <section id="users-section" class="tab-content active">
+            <div class="action-bar">
+                <h2>Users Management</h2>
+                <button class="add-button" onclick="showAddUserModal()">Add New User</button>
+            </div>
+            <div class="table-container">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <!-- Users will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Books Section -->
+        <section id="books-section" class="tab-content">
+            <div class="action-bar">
+                <h2>Books Management</h2>
+                <button class="add-button" onclick="showAddBookModal()">Add New Book</button>
+            </div>
+            <div class="table-container">
+                <table id="books-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Status</th>
+                            <th>User ID</th>
+                            <th>Rating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="books-tbody">
+                        <!-- Books will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Add User Modal -->
+        <div id="add-user-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Add New User</h2>
+                <form id="add-user-form">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <select name="role" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn">Add User</button>
+                        <button type="button" class="btn secondary-btn" onclick="hideModal('add-user-modal')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Book Modal -->
+        <div id="add-book-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Add New Book</h2>
+                <form id="add-book-form">
+                    <input type="text" name="title" placeholder="Book Title" required>
+                    <input type="text" name="author" placeholder="Author" required>
+                    <input type="text" name="userId" placeholder="User ID" required>
+                    <select name="status" required>
+                        <option value="wishlist">Wishlist</option>
+                        <option value="reading">Reading</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <input type="number" name="rating" placeholder="Rating (1-5)" min="1" max="5">
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn">Add Book</button>
+                        <button type="button" class="btn secondary-btn" onclick="hideModal('add-book-modal')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>

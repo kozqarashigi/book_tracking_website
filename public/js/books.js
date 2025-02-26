@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login'; 
+    }
+
     await fetchBooks();
 
     document.getElementById("add-book-btn").addEventListener("click", function () {
@@ -31,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         const title = document.getElementById("title").value.trim();
         const author = document.getElementById("author").value.trim();
-        const status = document.getElementById("status").value || "wishlist";
+        const status = document.getElementById("status").value;
 
         const rating = status === "completed" ? Number(document.getElementById("rating").value) || null : null;
     
@@ -39,12 +44,29 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Title and Author are required!");
             return;
         }
+
+        const token = getToken();
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
     
         await fetch("/api/books/add", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
+            },
             body: JSON.stringify({ title, author, status, rating }),
+        });
+
+        document.getElementById("title").value = "";
+        document.getElementById("author").value = "";
+        document.getElementById("status").value = "wishlist"; 
+        document.getElementById("rating").value = "0";
+        
+        document.querySelectorAll(".star").forEach(s => {
+            s.style.color = "gray";
         });
     
         document.getElementById("book-form-container").style.display = "none";
@@ -54,9 +76,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     
 });
 
+function getToken() {
+    return localStorage.getItem('token');
+}
+
+function isAuthenticated() {
+    return !!getToken();
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+}
+
 async function fetchBooks() {
     try {
-        const response = await fetch("/api/books");
+        const token = getToken();
+        
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+
+        const response = await fetch("/api/books", {
+            headers: {
+                "Authorization": `Bearer ${token}`  
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Token expired or invalid
+                logout();
+                return;
+            }
+            throw new Error('Failed to fetch books');
+        }
+        
         const books = await response.json();
 
         document.getElementById("wishlist-books").innerHTML = "";
@@ -81,21 +138,21 @@ async function fetchBooks() {
 
             if (book.status === "wishlist") {
                 bookCard.innerHTML += `
-                    <button onclick="updateBook('${book._id}', 'reading')">Mark as Reading</button>
-                    <button onclick="updateBook('${book._id}', 'completed')">Mark as Completed</button>
-                    <button onclick="deleteBook('${book._id}')">Delete</button>
+                    <button class="btn" onclick="updateBook('${book._id}', 'reading')">Mark as Reading</button>
+                    <button class="btn" onclick="updateBook('${book._id}', 'completed')">Mark as Completed</button>
+                    <button class="btn" onclick="deleteBook('${book._id}')">Delete</button>
                 `;
                 document.getElementById("wishlist-books").appendChild(bookCard);
             } else if (book.status === "reading") {
                 bookCard.innerHTML += `
-                    <button onclick="updateBook('${book._id}', 'completed')">Mark as Completed</button>
-                    <button onclick="deleteBook('${book._id}')">Delete</button>
+                    <button class="btn" onclick="updateBook('${book._id}', 'completed')">Mark as Completed</button>
+                    <button class="btn" onclick="deleteBook('${book._id}')">Delete</button>
                 `;
                 document.getElementById("reading-books").appendChild(bookCard);
             } else if (book.status === "completed") {
                 bookCard.innerHTML += `
-                    <button onclick="rateBook('${book._id}')">Rate this book</button>
-                    <button onclick="deleteBook('${book._id}')">Delete</button>
+                    <button class="btn" onclick="rateBook('${book._id}')">Rate this book</button>
+                    <button class="btn" onclick="deleteBook('${book._id}')">Delete</button>
                 `;
                 document.getElementById("completed-books").appendChild(bookCard);
             }
@@ -106,9 +163,18 @@ async function fetchBooks() {
 }
 
 async function updateBook(id, status) {
+    const token = getToken();
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
     await fetch(`/api/books/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`  
+        },
         body: JSON.stringify({ status }),
     });
 
@@ -116,17 +182,37 @@ async function updateBook(id, status) {
 }
 
 async function deleteBook(id) {
-    await fetch(`/api/books/${id}`, { method: "DELETE" });
+    const token = getToken();
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
+    await fetch(`/api/books/${id}`, { 
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}` 
+        }
+    });
     fetchBooks();
 }
 
 async function rateBook(id) {
+    const token = getToken();
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+
     const rating = prompt("Rate this book from 1 to 5:");
     if (!rating || rating < 1 || rating > 5) return alert("Invalid rating!");
 
     await fetch(`/api/books/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`  
+        },
         body: JSON.stringify({ rating }),
     });
 

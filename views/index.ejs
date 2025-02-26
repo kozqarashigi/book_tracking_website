@@ -7,24 +7,39 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <header>
-       <!-- <div class="banner">
-            Welcome to Book Tracker 📚
-        </div> -->
-        
-        <!-- Book Lover Aesthetic Image -->
+    <div class="container">
         <div class="image-container">
             <img src="/images/book_banner.jpg" alt="Books and Coffee" class="home-image">
         </div>
-        
         <h1>Welcome to Book Tracker</h1>
-        <% if (user) { %>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/logout">Logout</a>
-        <% } else { %>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-        <% } %>
-    </header>
+        <div id="auth-links">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const authLinks = document.getElementById('auth-links');
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                authLinks.innerHTML = `
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="#" id="logout-link">Logout</a>
+                `;
+                
+                document.getElementById('logout-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                });
+            } else {
+                authLinks.innerHTML = `
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>

@@ -275,6 +275,7 @@ a:hover {
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
+    margin-bottom: 5px;
 }
 
 .btn:hover {
@@ -291,8 +292,8 @@ a:hover {
 }
 
 .book-card button {
-    background-color: var(--button); /* Цвет кнопки */
-    color: var(--text); /* Цвет текста */
+    background-color: var(--button); 
+    color: var(--text);
     border: none;
     padding: 8px 12px;
     font-size: 14px;
@@ -300,7 +301,7 @@ a:hover {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    font-family: "Georgia", serif; /* Винтажный шрифт */
+    font-family: "Georgia", serif; 
 }
 
 .book-card button:hover {
@@ -324,4 +325,20 @@ a:hover {
 
 .logout-link:hover {
     text-decoration: underline;
+}
+
+
+#wishlist-section, #reading-section, #completed-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#wishlist-section h2, #reading-section h2, #completed-section h2 {
+    margin-bottom: 15px;
+    color: var(--text);
+    font-size: 1.5rem;
+    text-align: left;
 }

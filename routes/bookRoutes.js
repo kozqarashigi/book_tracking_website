@@ -1,11 +1,12 @@
 const express = require("express");
 const Book = require("../models/Book");
+const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
 
-
-router.get('/books', async (req, res) => {
+// Get all books for the logged-in user
+router.get('/', protect, async (req, res) => {
     try {
-        const books = await Book.find(); // Fetch all books
+        const books = await Book.find({ userId: req.user._id });
         res.json(books);
     } catch (error) {
         console.error('Error fetching books:', error);
@@ -13,45 +14,69 @@ router.get('/books', async (req, res) => {
     }
 });
 
-module.exports = router;
-
-
-router.post('/add', async (req, res) => {
+// Add a new book
+router.post('/add', protect, async (req, res) => {
     try {
-        const { title, author } = req.body;
-        const userId = req.session.user ? req.session.user.id : null; // Ensure userId is retrieved
-
-        if (!userId) {
-            return res.status(400).json({ error: 'User not authenticated' });
-        }
-
-        const newBook = new Book({ title, author, userId });
+        const { title, author, status, rating } = req.body;
+        
+        const newBook = new Book({
+            title,
+            author,
+            status,
+            rating: status === "completed" ? rating : null,
+            userId: req.user._id
+        });
+        
         await newBook.save();
-        res.status(201).json({ message: 'Book added successfully' });
+        res.status(201).json({ message: 'Book added successfully', book: newBook });
     } catch (error) {
         console.error('Error adding book:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-
-
-// Update book status
-router.put("/:id", async (req, res) => {
+// Update book
+router.put("/:id", protect, async (req, res) => {
     try {
+        const book = await Book.findById(req.params.id);
+        
+        // Check if book exists
+        if (!book) {
+            return res.status(404).json({ error: "Book not found" });
+        }
+        
+        // Check if user owns the book
+        if (book.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: "Not authorized to update this book" });
+        }
+        
         const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.json(updatedBook);
     } catch (error) {
+        console.error('Error updating book:', error);
         res.status(500).json({ error: "Server error" });
     }
 });
 
 // Delete book
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
     try {
+        const book = await Book.findById(req.params.id);
+        
+        // Check if book exists
+        if (!book) {
+            return res.status(404).json({ error: "Book not found" });
+        }
+        
+        // Check if user owns the book
+        if (book.userId.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: "Not authorized to delete this book" });
+        }
+        
         await Book.findByIdAndDelete(req.params.id);
         res.json({ message: "Book deleted" });
     } catch (error) {
+        console.error('Error deleting book:', error);
         res.status(500).json({ error: "Server error" });
     }
 });
