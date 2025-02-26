@@ -5,7 +5,7 @@
 - Dilyara Akhmetova SE-2325
 
 ## Project Overview
-This is a **Book Tracking Website** built with **Node.js, Express.js, and MongoDB**. It allows users to register, log in, manage their profile, and track books they have read, are currently reading, or plan to read.
+This is a **Book Tracking Website** built with **Node.js, Express.js, and MongoDB**. It allows users to register, log in, manage their profile, and track books they have read, are currently reading, or plan to read. Also, admins have their own panel where they can see and manage users and books. 
 
 ## Project Setup
 
