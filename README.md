@@ -11,8 +11,8 @@ This is a **Book Tracking Website** built with **Node.js, Express.js, and MongoD
 
 ### 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone <[repository-url](https://github.com/kozqarashigi/book_tracking_website)>
+cd <book_tracking_website>
 ```
 
 ### 2. Install dependencies:
