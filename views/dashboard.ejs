@@ -9,7 +9,10 @@
 <body>
     <header>
         <h1 id="welcome-header">Welcome!</h1>
-        <div id="admin-link-container"></div>
+        <div class="nav-links">
+            <a href="#" class="profile-link" onclick="showProfileModal(); return false;">My Profile</a>
+            <div id="admin-link-container"></div>
+        </div>
     </header>
 
     <!--  Button to Open Form -->
@@ -46,6 +49,26 @@
         </form>
     </div>
 
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <h2>My profile</h2>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="profile-username">Username</label>
+                    <input type="text" id="profile-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="profile-email">Email</label>
+                    <input type="email" id="profile-email" name="email" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn">Save</button>
+                    <button type="button" class="btn secondary-btn" onclick="hideProfileModal()">Back</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <h2>Your Book List</h2>
 
     <div id="wishlist-section">
@@ -63,11 +86,9 @@
         <div id="completed-books" class="book-list"></div>
     </div>
 
-    <a href="/logout" class="logout-link">Logout</a>
-
     <script src="/js/books.js" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const userString = localStorage.getItem('user');
             
             if (!userString) {
@@ -85,6 +106,73 @@
             const adminLinkContainer = document.getElementById('admin-link-container');
             if (adminLinkContainer && user.role === 'admin') {
                 adminLinkContainer.innerHTML = '<a href="/admin" class="admin-link">Go to Admin Panel</a>';
+            }
+
+            // Fetch user profile from server
+            try {
+                const response = await fetch('/api/users/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+
+                // Update email from server response
+                document.getElementById('profile-email').value = data.user.email;
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+        });
+
+        function showProfileModal() {
+            const userString = localStorage.getItem('user');
+            if (!userString) return;
+            
+            const user = JSON.parse(userString);
+            const modal = document.getElementById('profile-modal');
+            
+            document.getElementById('profile-username').value = user.username;
+
+            modal.classList.add('active');
+        }
+
+        function hideProfileModal() {
+            const modal = document.getElementById('profile-modal');
+            modal.classList.remove('active');
+        }
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('profile-username').value;
+            const email = document.getElementById('profile-email').value;
+            
+            try {
+                const response = await fetch('/api/users/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ username, email })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to update profile');
+                }
+                
+                const user = JSON.parse(localStorage.getItem('user'));
+                user.username = username;
+                localStorage.setItem('user', JSON.stringify(user));
+                
+                document.getElementById('welcome-header').textContent = `Welcome, ${username}!`;
+                
+                alert('Profile updated successfully!');
+                hideProfileModal();
+            } catch (error) {
+                alert(error.message);
             }
         });
     </script>

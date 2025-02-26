@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const userRoutes = require("./routes/users");
 const Book = require("./models/Book"); 
 const cors = require("cors");
 const { protect, isAdmin } = require("./middleware/authMiddleware");
@@ -54,7 +55,9 @@ app.get("/register", (req, res) => res.render("register"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", protect, bookRoutes);
+app.use("/api/users", protect, userRoutes);
 app.use("/admin", adminRoutes);
+
 
 // Dashboard
 app.get("/dashboard", async (req, res) => {

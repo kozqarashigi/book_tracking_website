@@ -22,6 +22,7 @@ async function login(email, password) {
             username: data.username,
             role: data.role
         }));
+
         
         alert("Login successful!");
         window.location.href = '/dashboard';
