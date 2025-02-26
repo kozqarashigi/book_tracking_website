@@ -12,6 +12,10 @@
         <div class="nav-links">
             <a href="#" class="profile-link" onclick="showProfileModal(); return false;">My Profile</a>
             <div id="admin-link-container"></div>
+<<<<<<< HEAD
+=======
+            <a href="#" id="logout-btn" class="logout-link">Logout</a>
+>>>>>>> 78b9fb2 (Initial commit)
         </div>
     </header>
 
@@ -88,6 +92,10 @@
 
     <script src="/js/books.js" defer></script>
     <script>
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 78b9fb2 (Initial commit)
         document.addEventListener('DOMContentLoaded', async () => {
             const userString = localStorage.getItem('user');
             
@@ -175,6 +183,17 @@
                 alert(error.message);
             }
         });
+<<<<<<< HEAD
+=======
+
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        });
+
+>>>>>>> 78b9fb2 (Initial commit)
     </script>
 </body>
 </html>
